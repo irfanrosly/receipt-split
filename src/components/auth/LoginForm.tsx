@@ -14,15 +14,18 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
+      setError(error.message);
       toast.error(error.message);
       setLoading(false);
       return;
@@ -46,6 +49,8 @@ export function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
+              aria-invalid={!!error}
+              className="min-h-11"
             />
           </div>
 
@@ -59,10 +64,18 @@ export function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
+              aria-invalid={!!error}
+              className="min-h-11"
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          {error && (
+            <p className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
+          )}
+
+          <Button type="submit" className="w-full min-h-11" disabled={loading}>
             {loading ? "Signing in..." : "Sign in"}
           </Button>
         </form>

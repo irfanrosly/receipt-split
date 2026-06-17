@@ -14,7 +14,9 @@ export function StatusBadge({ status, className }: Props) {
     <Badge
       variant={settled ? "default" : "secondary"}
       className={cn(
-        settled ? "bg-success text-white hover:bg-success/90" : "bg-warning/15 text-warning hover:bg-warning/20",
+        settled
+          ? "bg-success/15 text-success-foreground hover:bg-success/20"
+          : "bg-warning/15 text-warning-foreground hover:bg-warning/20",
         className
       )}
     >

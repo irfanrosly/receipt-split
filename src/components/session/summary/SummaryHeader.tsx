@@ -120,7 +120,7 @@ export function SummaryHeader({ session }: Props) {
               <Button
                 size="sm"
                 variant="outline"
-                className="gap-1.5"
+                className="gap-1.5 min-h-11"
                 onClick={handleEdit}
                 disabled={editing}
               >
@@ -130,7 +130,7 @@ export function SummaryHeader({ session }: Props) {
               <Button
                 size="sm"
                 variant="outline"
-                className="gap-1.5 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                className="gap-1.5 min-h-11 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                 onClick={() => setSettleOpen(true)}
                 disabled={settling}
               >

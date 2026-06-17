@@ -72,6 +72,7 @@ export function Step1Upload() {
           placeholder="e.g. Dinner with friends"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          className="h-11"
         />
       </div>
 
@@ -142,7 +143,7 @@ export function Step1Upload() {
 
       {ocrError && (
         <div className="rounded-xl border border-warning/30 bg-warning/10 p-3 space-y-2">
-          <p className="text-sm text-warning">{ocrError}</p>
+          <p className="text-sm text-warning-foreground">{ocrError}</p>
           {file && (
             <Button type="button" variant="outline" size="sm" onClick={retryOcr}>
               Try again

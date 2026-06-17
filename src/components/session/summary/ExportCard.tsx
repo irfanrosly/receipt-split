@@ -2,6 +2,7 @@
 // ALL styles must be inline — no Tailwind classes (they don't resolve during capture).
 
 import type { PersonSplit } from "@/types/session";
+import { readableTextColor } from "@/lib/utils";
 
 interface Props {
   split: PersonSplit;
@@ -42,7 +43,7 @@ export function ExportCard({ split, sessionTitle, ref }: Props) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#fff",
+              color: readableTextColor(participant.color),
               fontWeight: 700,
               fontSize: 14,
             }}

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, readableTextColor } from "@/lib/utils";
 
 interface Props {
   name: string;
@@ -13,11 +13,11 @@ export function ParticipantAvatar({ name, color, size = "md", className }: Props
   return (
     <div
       className={cn(
-        "rounded-full flex items-center justify-center font-bold text-white shrink-0",
+        "rounded-full flex items-center justify-center font-bold shrink-0",
         sizeClass,
         className
       )}
-      style={{ backgroundColor: color }}
+      style={{ backgroundColor: color, color: readableTextColor(color) }}
       aria-hidden="true"
     >
       {name.charAt(0).toUpperCase()}

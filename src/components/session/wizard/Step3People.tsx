@@ -5,6 +5,7 @@ import { X, Users, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useWizardStore } from "@/stores/sessionWizardStore";
+import { readableTextColor } from "@/lib/utils";
 import type { SplitMode } from "@/types/session";
 import { WizardNav } from "./WizardNav";
 
@@ -42,8 +43,8 @@ export function Step3People() {
         {participants.map((p) => (
           <span
             key={p.id}
-            className="motion-safe:animate-in motion-safe:fade-in-0 motion-safe:zoom-in-95 motion-safe:duration-200 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium text-white"
-            style={{ backgroundColor: p.color }}
+            className="motion-safe:animate-in motion-safe:fade-in-0 motion-safe:zoom-in-95 motion-safe:duration-200 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
+            style={{ backgroundColor: p.color, color: readableTextColor(p.color) }}
           >
             {p.name}
             <button

@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useWizardStore } from "@/stores/sessionWizardStore";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, readableTextColor } from "@/lib/utils";
 import { WizardNav } from "./WizardNav";
 
 export function Step4Assign() {
@@ -60,7 +60,7 @@ export function Step4Assign() {
             Tap names to assign each item. Unassigned items split equally.
           </p>
           <span
-            className={`font-medium tabular-nums shrink-0 ml-3 ${allAssigned ? "text-success" : "text-muted-foreground"}`}
+            className={`font-medium tabular-nums shrink-0 ml-3 ${allAssigned ? "text-success-foreground" : "text-muted-foreground"}`}
           >
             {assignedCount}/{items.length}
             {allAssigned ? " ✓" : ""}
@@ -106,10 +106,18 @@ export function Step4Assign() {
                         onClick={() => toggleAssignee(item.id, p.id)}
                         className={`motion-safe:animate-pop px-2.5 py-1.5 min-h-11 rounded-full text-xs font-medium border transition-colors ${
                           isSelected
-                            ? "text-white border-transparent"
+                            ? "border-transparent"
                             : "border-border text-muted-foreground hover:border-primary/50"
                         }`}
-                        style={isSelected ? { backgroundColor: p.color, borderColor: p.color } : {}}
+                        style={
+                          isSelected
+                            ? {
+                                backgroundColor: p.color,
+                                borderColor: p.color,
+                                color: readableTextColor(p.color),
+                              }
+                            : {}
+                        }
                       >
                         {p.name}
                       </button>
@@ -127,7 +135,7 @@ export function Step4Assign() {
                 </div>
 
                 {isUnassigned && (
-                  <p className="text-xs text-warning">Will split equally among all</p>
+                  <p className="text-xs text-warning-foreground">Will split equally among all</p>
                 )}
               </CardContent>
             </Card>

@@ -14,10 +14,12 @@ export function SignupForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     const supabase = createClient();
     const { error } = await supabase.auth.signUp({
@@ -27,6 +29,7 @@ export function SignupForm() {
     });
 
     if (error) {
+      setError(error.message);
       toast.error(error.message);
       setLoading(false);
       return;
@@ -68,6 +71,8 @@ export function SignupForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
+              aria-invalid={!!error}
+              className="min-h-11"
             />
           </div>
 
@@ -82,10 +87,18 @@ export function SignupForm() {
               required
               minLength={8}
               autoComplete="new-password"
+              aria-invalid={!!error}
+              className="min-h-11"
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          {error && (
+            <p className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
+          )}
+
+          <Button type="submit" className="w-full min-h-11" disabled={loading}>
             {loading ? "Creating account..." : "Create account"}
           </Button>
         </form>

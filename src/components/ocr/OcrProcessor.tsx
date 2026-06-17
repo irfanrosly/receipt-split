@@ -48,12 +48,11 @@ export function OcrProcessor({ file, onDone, onError }: Props) {
   }
 
   return (
-    <div className="space-y-3 p-4 rounded-xl bg-muted">
+    <div className="p-4 rounded-xl bg-muted">
       <div className="flex items-center gap-3">
         <Loader2 className="h-5 w-5 animate-spin text-primary shrink-0" />
-        <p className="text-sm font-medium">{status}</p>
+        <p className="text-sm font-medium" aria-live="polite">{status}</p>
       </div>
-      <p className="text-xs text-muted-foreground">Analysing your receipt with AI…</p>
     </div>
   );
 }
