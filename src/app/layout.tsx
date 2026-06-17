@@ -16,13 +16,13 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Cozy Crown",
-  description: "Split bills the cozy way",
+  title: "SplitLah",
+  description: "Split bills the easy way",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Cozy Crown",
+    title: "SplitLah",
   },
 };
 

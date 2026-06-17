@@ -23,8 +23,8 @@ export function TopNav({ email }: { email: string }) {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="container max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/dashboard" className="font-heading text-xl font-bold text-primary">
-          <span aria-hidden="true">👑 </span>
-          Cozy Crown
+          <span aria-hidden="true">✂️ </span>
+          SplitLah
         </Link>
 
         <div className="flex items-center gap-2">

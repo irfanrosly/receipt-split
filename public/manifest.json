@@ -1,11 +1,11 @@
 {
-  "name": "Cozy Crown",
-  "short_name": "CozyCrown",
-  "description": "Split bills the cozy way",
+  "name": "SplitLah",
+  "short_name": "SplitLah",
+  "description": "Split bills the easy way",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFBEB",
-  "theme_color": "#C2410C",
+  "background_color": "#FAFAFA",
+  "theme_color": "#047857",
   "orientation": "portrait",
   "icons": [
     {

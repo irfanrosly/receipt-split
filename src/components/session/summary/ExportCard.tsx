@@ -163,7 +163,7 @@ export function ExportCard({ split, sessionTitle, payment, qrDataUrl, ref }: Pro
 
       {/* Footer */}
       <p style={{ textAlign: "center", fontSize: 10, color: "#A1A1AA", marginTop: 14, marginBottom: 0 }}>
-        👑 Cozy Crown
+        ✂️ SplitLah
       </p>
     </div>
   );

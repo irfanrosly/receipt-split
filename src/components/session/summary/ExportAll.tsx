@@ -51,7 +51,7 @@ export function ExportAll({ splits, sessionTitle, payment, qrUrl }: Props) {
   }, [qrUrl]);
 
   const fileName = (idx: number) =>
-    `cozy-crown-${splits[idx].participant.name.replace(/\s+/g, "-").toLowerCase()}.png`;
+    `splitlah-${splits[idx].participant.name.replace(/\s+/g, "-").toLowerCase()}.png`;
 
   function payToLine(): string | null {
     if (payment && (payment.name || payment.bank || payment.account)) {
@@ -67,7 +67,7 @@ export function ExportAll({ splits, sessionTitle, payment, qrUrl }: Props) {
     ];
     const pay = payToLine();
     if (pay) lines.push(pay);
-    lines.push("👑 Cozy Crown");
+    lines.push("✂️ SplitLah");
     return lines.join("\n");
   }
 
@@ -81,7 +81,7 @@ export function ExportAll({ splits, sessionTitle, payment, qrUrl }: Props) {
       lines.push("");
       lines.push(pay);
     }
-    lines.push("👑 Cozy Crown");
+    lines.push("✂️ SplitLah");
     return lines.join("\n");
   }
 

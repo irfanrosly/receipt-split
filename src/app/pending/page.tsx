@@ -22,7 +22,7 @@ export default async function PendingPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-sm text-center space-y-4">
         <h1 className="font-heading text-xl font-bold text-primary">
-          <span aria-hidden="true">👑 </span>Awaiting approval
+          <span aria-hidden="true">✂️ </span>Awaiting approval
         </h1>
         <p className="text-sm text-muted-foreground">
           Your account ({user.email}) is pending approval. You&apos;ll get access

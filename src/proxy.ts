@@ -26,8 +26,10 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
   const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/signup");
+  // Root "/" is the public landing page — page.tsx redirects authed users to /dashboard.
+  const isPublicRoute = isAuthRoute || pathname === "/";
 
-  if (!user && !isAuthRoute) {
+  if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
