@@ -1,17 +1,28 @@
-// Off-screen card captured by dom-to-image-more.
+// Off-screen card captured by html-to-image.
 // ALL styles must be inline — no Tailwind classes (they don't resolve during capture).
 
 import type { PersonSplit } from "@/types/session";
 import { readableTextColor } from "@/lib/utils";
 
+export interface CardPayment {
+  name: string | null;
+  bank: string | null;
+  account: string | null;
+}
+
 interface Props {
   split: PersonSplit;
   sessionTitle: string;
+  payment: CardPayment | null;
+  qrDataUrl: string | null;
   ref: React.Ref<HTMLDivElement>;
 }
 
-export function ExportCard({ split, sessionTitle, ref }: Props) {
+export function ExportCard({ split, sessionTitle, payment, qrDataUrl, ref }: Props) {
   const { participant, subtotal, service_charge, tax, total, items } = split;
+
+  const hasPaymentText = !!(payment && (payment.name || payment.bank || payment.account));
+  const showPayment = hasPaymentText || !!qrDataUrl;
 
   const formatMYR = (n: number) =>
     new Intl.NumberFormat("en-MY", { style: "currency", currency: "MYR" }).format(n);
@@ -24,7 +35,7 @@ export function ExportCard({ split, sessionTitle, ref }: Props) {
         backgroundColor: "#FAFAFA",
         borderRadius: 16,
         padding: 24,
-        fontFamily: "'Nunito Sans', Arial, sans-serif",
+        fontFamily: "var(--font-nunito), 'Trebuchet MS', Arial, sans-serif",
         color: "#18181B",
       }}
     >
@@ -80,7 +91,7 @@ export function ExportCard({ split, sessionTitle, ref }: Props) {
         </div>
         {service_charge > 0 && (
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
-            <span style={{ color: "#71717A" }}>Service charge</span>
+            <span style={{ color: "#71717A", whiteSpace: "nowrap" }}>Service charge</span>
             <span>{formatMYR(service_charge)}</span>
           </div>
         )}
@@ -103,9 +114,52 @@ export function ExportCard({ split, sessionTitle, ref }: Props) {
           alignItems: "center",
         }}
       >
-        <span style={{ color: "#fff", fontWeight: 600, fontSize: 14 }}>You owe</span>
+        <span style={{ color: "#fff", fontWeight: 600, fontSize: 14, whiteSpace: "nowrap" }}>You owe</span>
         <span style={{ color: "#fff", fontWeight: 800, fontSize: 20 }}>{formatMYR(total)}</span>
       </div>
+
+      {/* Pay to */}
+      {showPayment && (
+        <div
+          style={{
+            marginTop: 14,
+            borderTop: "1px solid #E4E4E7",
+            paddingTop: 12,
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              fontSize: 11,
+              color: "#71717A",
+              margin: 0,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+            }}
+          >
+            Pay to
+          </p>
+          {payment?.name && (
+            <p style={{ fontSize: 15, fontWeight: 700, margin: "4px 0 0" }}>{payment.name}</p>
+          )}
+          {payment?.bank && (
+            <p style={{ fontSize: 13, color: "#52525B", margin: "2px 0 0" }}>{payment.bank}</p>
+          )}
+          {payment?.account && (
+            <p style={{ fontSize: 14, fontWeight: 600, margin: "2px 0 0", letterSpacing: 0.5 }}>
+              {payment.account}
+            </p>
+          )}
+          {qrDataUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={qrDataUrl}
+              alt="Payment QR"
+              style={{ width: 150, height: 150, objectFit: "contain", margin: "10px auto 0", display: "block" }}
+            />
+          )}
+        </div>
+      )}
 
       {/* Footer */}
       <p style={{ textAlign: "center", fontSize: 10, color: "#A1A1AA", marginTop: 14, marginBottom: 0 }}>

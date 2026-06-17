@@ -44,6 +44,10 @@ export type Database = {
           total: number;
           currency: string;
           status: "draft" | "settled";
+          pay_name: string | null;
+          pay_bank: string | null;
+          pay_account: string | null;
+          pay_qr_url: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -60,6 +64,10 @@ export type Database = {
           total?: number;
           currency?: string;
           status?: "draft" | "settled";
+          pay_name?: string | null;
+          pay_bank?: string | null;
+          pay_account?: string | null;
+          pay_qr_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -76,6 +84,10 @@ export type Database = {
           total?: number;
           currency?: string;
           status?: "draft" | "settled";
+          pay_name?: string | null;
+          pay_bank?: string | null;
+          pay_account?: string | null;
+          pay_qr_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };

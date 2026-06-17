@@ -179,3 +179,48 @@ export async function uploadReceiptImage(
   const { data } = supabase.storage.from("receipts").getPublicUrl(path);
   return data.publicUrl;
 }
+
+export async function uploadPaymentQr(
+  supabase: Client,
+  userId: string,
+  sessionId: string,
+  file: File
+): Promise<string | null> {
+  const ext = file.name.split(".").pop()?.toLowerCase() || "png";
+  const path = `${userId}/${sessionId}-payqr.${ext}`;
+
+  const { error: uploadErr } = await supabase.storage.from("receipts").upload(path, file, {
+    upsert: true,
+    contentType: file.type || "image/png",
+  });
+
+  if (uploadErr) {
+    console.error("Payment QR upload failed", uploadErr);
+    return null;
+  }
+
+  const { data } = supabase.storage.from("receipts").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+export interface PaymentDetailsInput {
+  pay_name: string | null;
+  pay_bank: string | null;
+  pay_account: string | null;
+  pay_qr_url: string | null;
+}
+
+export async function savePaymentDetails(
+  supabase: Client,
+  sessionId: string,
+  userId: string,
+  details: PaymentDetailsInput
+): Promise<void> {
+  const { error } = await supabase
+    .from("sessions")
+    .update(details)
+    .eq("id", sessionId)
+    .eq("user_id", userId);
+
+  if (error) throw error;
+}

@@ -5,6 +5,7 @@ import { loadSessionForSplit } from "@/lib/sessions/saveSessionFromWizard";
 import { SummaryHeader } from "@/components/session/summary/SummaryHeader";
 import { PersonCard } from "@/components/session/summary/PersonCard";
 import { ExportAll } from "@/components/session/summary/ExportAll";
+import { PaymentDetails } from "@/components/session/summary/PaymentDetails";
 
 interface Props {
   params: Promise<{ sessionId: string }>;
@@ -40,7 +41,18 @@ export default async function SessionPage({ params }: Props) {
         ))}
       </div>
 
-      <ExportAll splits={splits} sessionTitle={data.session.title} />
+      <PaymentDetails session={data.session} />
+
+      <ExportAll
+        splits={splits}
+        sessionTitle={data.session.title}
+        payment={{
+          name: data.session.pay_name,
+          bank: data.session.pay_bank,
+          account: data.session.pay_account,
+        }}
+        qrUrl={data.session.pay_qr_url}
+      />
     </div>
   );
 }
