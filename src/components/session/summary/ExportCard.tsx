@@ -21,16 +21,16 @@ export function ExportCard({ split, sessionTitle, ref }: Props) {
       ref={ref}
       style={{
         width: 360,
-        backgroundColor: "#FFFBEB",
+        backgroundColor: "#FAFAFA",
         borderRadius: 16,
         padding: 24,
         fontFamily: "'Nunito Sans', Arial, sans-serif",
-        color: "#1C1917",
+        color: "#18181B",
       }}
     >
       {/* Header */}
-      <div style={{ marginBottom: 16, borderBottom: "2px solid #F1E8E2", paddingBottom: 12 }}>
-        <p style={{ fontSize: 11, color: "#78716C", margin: 0, letterSpacing: 1, textTransform: "uppercase" }}>
+      <div style={{ marginBottom: 16, borderBottom: "2px solid #E4E4E7", paddingBottom: 12 }}>
+        <p style={{ fontSize: 11, color: "#71717A", margin: 0, letterSpacing: 1, textTransform: "uppercase" }}>
           {sessionTitle}
         </p>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
@@ -66,27 +66,27 @@ export function ExportCard({ split, sessionTitle, ref }: Props) {
               fontSize: 13,
             }}
           >
-            <span style={{ color: "#57534E", flex: 1, marginRight: 8 }}>{item.name}</span>
+            <span style={{ color: "#52525B", flex: 1, marginRight: 8 }}>{item.name}</span>
             <span style={{ fontWeight: 600 }}>{formatMYR(item.share)}</span>
           </div>
         ))}
       </div>
 
       {/* Subtotals */}
-      <div style={{ borderTop: "1px solid #F1E8E2", paddingTop: 10, marginBottom: 10 }}>
+      <div style={{ borderTop: "1px solid #E4E4E7", paddingTop: 10, marginBottom: 10 }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
-          <span style={{ color: "#78716C" }}>Subtotal</span>
+          <span style={{ color: "#71717A" }}>Subtotal</span>
           <span>{formatMYR(subtotal)}</span>
         </div>
         {service_charge > 0 && (
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
-            <span style={{ color: "#78716C" }}>Service charge</span>
+            <span style={{ color: "#71717A" }}>Service charge</span>
             <span>{formatMYR(service_charge)}</span>
           </div>
         )}
         {tax > 0 && (
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
-            <span style={{ color: "#78716C" }}>Tax</span>
+            <span style={{ color: "#71717A" }}>Tax</span>
             <span>{formatMYR(tax)}</span>
           </div>
         )}
@@ -95,7 +95,7 @@ export function ExportCard({ split, sessionTitle, ref }: Props) {
       {/* Total */}
       <div
         style={{
-          backgroundColor: "#C2410C",
+          backgroundColor: "#047857",
           borderRadius: 10,
           padding: "10px 14px",
           display: "flex",
@@ -108,7 +108,7 @@ export function ExportCard({ split, sessionTitle, ref }: Props) {
       </div>
 
       {/* Footer */}
-      <p style={{ textAlign: "center", fontSize: 10, color: "#A8A29E", marginTop: 14, marginBottom: 0 }}>
+      <p style={{ textAlign: "center", fontSize: 10, color: "#A1A1AA", marginTop: 14, marginBottom: 0 }}>
         👑 Cozy Crown
       </p>
     </div>

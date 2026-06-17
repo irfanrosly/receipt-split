@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          id: string;
+          email: string | null;
+          approved: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          email?: string | null;
+          approved?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string | null;
+          approved?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       sessions: {
         Row: {
           id: string;
@@ -148,6 +169,7 @@ export type Database = {
   };
 };
 
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Session = Database["public"]["Tables"]["sessions"]["Row"];
 export type Participant = Database["public"]["Tables"]["participants"]["Row"];
 export type Item = Database["public"]["Tables"]["items"]["Row"];

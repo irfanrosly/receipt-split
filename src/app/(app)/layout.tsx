@@ -14,6 +14,14 @@ export default async function AppLayout({
 
   if (!user) redirect("/login");
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("approved")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.approved) redirect("/pending");
+
   return (
     <div className="min-h-screen flex flex-col">
       <TopNav email={user.email ?? ""} />
