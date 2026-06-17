@@ -8,9 +8,24 @@ import { NextRequest, NextResponse } from "next/server";
 const PROMPT = `You are a receipt parser. Extract every purchased line item from this receipt photo.
 
 For each item, extract:
-- name: the product name exactly as printed
+- name: the product name exactly as printed (strip dine-in/takeaway markers like "D" or "TA")
 - quantity: number of units (default 1 if not shown)
-- unit_price: price per unit as a decimal number
+- unit_price: price PER UNIT as a decimal number
+
+Quantity/price rule: when a line shows "price*qty" (e.g. 1.40*3), "qty X price" (e.g. 1 X 2.70),
+or "qty X price = total", the unit_price is the PER-UNIT price and quantity is the count — never put
+the line total in unit_price. The integer-looking operand is the quantity; the 2-decimal operand is the
+unit price. For weighed items (KG), quantity is the decimal weight and unit_price is the price per KG.
+
+Combo/set meals: return ONLY the priced parent line. Ignore sub-component lines printed at 0.00.
+
+NEVER include these as line items (exclude entirely):
+- subtotal, total, nett, rounding adjustment
+- tax / SST / GST / service charge
+- discount / saving summary lines, member / points / loyalty lines
+- change / cash / payment / approval code / RRN / card numbers
+- barcodes, SKU or product codes (long numeric strings)
+- store header/footer: SDN BHD, SSM registration no., address, table no., invoice/ticket no., cashier
 
 If visible, also extract:
 - merchant: the store/merchant name
@@ -132,8 +147,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Strip any items with empty names (edge-case safety)
-    const items = parsed.items.filter((item) => item.name.trim().length > 0);
+    // Drop invalid lines: empty names, and non-positive qty/price (also removes
+    // any 0.00 combo sub-components the model still returns).
+    const items = parsed.items.filter(
+      (item) =>
+        item.name.trim().length > 0 &&
+        Number.isFinite(item.quantity) &&
+        item.quantity > 0 &&
+        Number.isFinite(item.unit_price) &&
+        item.unit_price > 0
+    );
+
+    if (items.length === 0) {
+      return NextResponse.json(
+        { error: "No line items found. Try a clearer photo or enter items manually." },
+        { status: 422 }
+      );
+    }
 
     return NextResponse.json({
       items,
