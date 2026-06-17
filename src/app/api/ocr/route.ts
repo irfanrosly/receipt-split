@@ -1,53 +1,85 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import {
+  GoogleGenerativeAI,
+  SchemaType,
+  type ObjectSchema,
+} from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 
-const PROMPT = `You are a receipt parser. Extract every purchased line item.
-Return ONLY a JSON array, no markdown, no extra text:
-[{"name":"Item","quantity":1,"unit_price":12.50}]
-- Exclude totals, taxes, service charges, discounts, headers
-- quantity: number, default 1 if not shown
-- unit_price: price per unit as decimal number
-- If no items found, return []`;
+const PROMPT = `You are a receipt parser. Extract every purchased line item from this receipt photo.
+
+For each item, extract:
+- name: the product name exactly as printed
+- quantity: number of units (default 1 if not shown)
+- unit_price: price per unit as a decimal number
+
+If visible, also extract:
+- merchant: the store/merchant name
+- subtotal: the subtotal before tax
+- total: the final total paid
+- payment_method: e.g. VISA, cash, etc.
+
+If no items can be identified, return an empty items array.`;
+
+const schema = {
+  description: "Parsed receipt data",
+  type: SchemaType.OBJECT,
+  properties: {
+    items: {
+      type: SchemaType.ARRAY,
+      description: "Purchased line items",
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          name: {
+            type: SchemaType.STRING,
+            description: "Product name exactly as printed on receipt",
+          },
+          quantity: {
+            type: SchemaType.NUMBER,
+            description: "Number of units purchased (default 1)",
+          },
+          unit_price: {
+            type: SchemaType.NUMBER,
+            description: "Price per unit as a decimal number",
+          },
+        },
+        required: ["name", "quantity", "unit_price"],
+      },
+    },
+    merchant: {
+      type: SchemaType.STRING,
+      description: "Store or merchant name from the receipt",
+    },
+    subtotal: {
+      type: SchemaType.NUMBER,
+      description: "Subtotal before tax/discount",
+    },
+    total: {
+      type: SchemaType.NUMBER,
+      description: "Final total amount paid",
+    },
+    payment_method: {
+      type: SchemaType.STRING,
+      description: "Payment method used (e.g. VISA, cash)",
+    },
+  },
+  required: ["items"],
+} as unknown as ObjectSchema;
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-interface RawItem {
-  name: unknown;
-  quantity: unknown;
-  unit_price: unknown;
+interface LineItem {
+  name: string;
+  quantity: number;
+  unit_price: number;
 }
 
-function isValidItem(item: unknown): item is RawItem {
-  if (!item || typeof item !== "object") return false;
-  const o = item as Record<string, unknown>;
-  return (
-    typeof o.name === "string" &&
-    o.name.trim().length > 0 &&
-    typeof o.quantity === "number" &&
-    o.quantity > 0 &&
-    typeof o.unit_price === "number" &&
-    o.unit_price >= 0
-  );
-}
-
-function parseGeminiResponse(raw: string) {
-  const stripped = raw
-    .trim()
-    .replace(/^```(?:json)?\s*/m, "")
-    .replace(/\s*```$/m, "")
-    .trim();
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(stripped);
-  } catch {
-    return [];
-  }
-  if (!Array.isArray(parsed)) return [];
-  return parsed.filter(isValidItem).map((item) => ({
-    name: String(item.name).trim(),
-    quantity: Number(item.quantity),
-    unit_price: Number(item.unit_price),
-  }));
+interface OcrResponse {
+  items: LineItem[];
+  merchant?: string;
+  subtotal?: number;
+  total?: number;
+  payment_method?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -77,7 +109,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: schema,
+      },
+    });
 
     const result = await model.generateContent([
       { text: PROMPT },
@@ -85,16 +123,25 @@ export async function POST(req: NextRequest) {
     ]);
 
     const raw = result.response.text();
-    const items = parseGeminiResponse(raw);
+    const parsed: OcrResponse = JSON.parse(raw);
 
-    if (items.length === 0) {
+    if (!parsed.items || parsed.items.length === 0) {
       return NextResponse.json(
         { error: "No line items found. Try a clearer photo or enter items manually." },
         { status: 422 }
       );
     }
 
-    return NextResponse.json({ items });
+    // Strip any items with empty names (edge-case safety)
+    const items = parsed.items.filter((item) => item.name.trim().length > 0);
+
+    return NextResponse.json({
+      items,
+      ...(parsed.merchant && { merchant: parsed.merchant }),
+      ...(parsed.subtotal !== undefined && { subtotal: parsed.subtotal }),
+      ...(parsed.total !== undefined && { total: parsed.total }),
+      ...(parsed.payment_method && { payment_method: parsed.payment_method }),
+    });
   } catch (err) {
     const isParseError = err instanceof SyntaxError;
     if (isParseError) {
