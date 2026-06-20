@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Plus } from "lucide-react";
+import { useTheme } from "next-themes";
+import { LogOut, Moon, Plus, Sun } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -10,6 +11,7 @@ import { createClient } from "@/lib/supabase/client";
 export function TopNav({ email }: { email: string }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
   const showNewSession = pathname === "/dashboard" || pathname.startsWith("/sessions/");
 
   async function handleSignOut() {
@@ -37,6 +39,17 @@ export function TopNav({ email }: { email: string }) {
               <span className="hidden sm:inline">New session</span>
             </Link>
           )}
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-11 w-11"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          </Button>
           <span className="text-sm text-muted-foreground hidden sm:block truncate max-w-[160px]">
             {email}
           </span>
