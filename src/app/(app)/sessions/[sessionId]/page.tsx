@@ -6,6 +6,7 @@ import { SummaryHeader } from "@/components/session/summary/SummaryHeader";
 import { PersonCard } from "@/components/session/summary/PersonCard";
 import { ExportAll } from "@/components/session/summary/ExportAll";
 import { PaymentDetails } from "@/components/session/summary/PaymentDetails";
+import { ReceiptImage } from "@/components/session/summary/ReceiptImage";
 
 interface Props {
   params: Promise<{ sessionId: string }>;
@@ -34,6 +35,8 @@ export default async function SessionPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <SummaryHeader session={data.session} />
+
+      <ReceiptImage receiptUrl={data.session.receipt_url} />
 
       <div className="space-y-3">
         {splits.map((split) => (
