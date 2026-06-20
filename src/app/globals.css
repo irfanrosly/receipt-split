@@ -82,6 +82,39 @@
   --sidebar-ring: oklch(0.508 0.118 165.6);
 }
 
+.dark {
+  --background: oklch(0.21 0.006 285.9);      /* #18181B zinc-900 */
+  --foreground: oklch(0.967 0.001 286.4);     /* #F4F4F5 zinc-100 */
+  --card: oklch(0.27 0.006 286.0);            /* #27272A zinc-800 */
+  --card-foreground: oklch(0.967 0.001 286.4);
+  --popover: oklch(0.27 0.006 286.0);
+  --popover-foreground: oklch(0.967 0.001 286.4);
+  --primary: oklch(0.696 0.17 162.5);         /* #34D399 emerald-400 */
+  --primary-foreground: oklch(0.21 0.006 285.9);
+  --secondary: oklch(0.32 0.006 285.9);       /* #3F3F46 zinc-700 */
+  --secondary-foreground: oklch(0.967 0.001 286.4);
+  --muted: oklch(0.32 0.006 285.9);
+  --muted-foreground: oklch(0.717 0.015 285.9); /* #A1A1AA zinc-400 */
+  --accent: oklch(0.32 0.006 285.9);
+  --accent-foreground: oklch(0.967 0.001 286.4);
+  --destructive: oklch(0.704 0.191 22.2);     /* #F87171 red-400 */
+  --border: oklch(0.37 0.006 285.9);          /* #52525B zinc-600 */
+  --input: oklch(0.37 0.006 285.9);
+  --ring: oklch(0.696 0.17 162.5);
+  --success: oklch(0.622 0.162 161.5);        /* #059669 — kept for badges */
+  --success-foreground: oklch(0.85 0.12 155);  /* lighter emerald text */
+  --warning: oklch(0.688 0.167 60.1);          /* #D97706 — kept for badges */
+  --warning-foreground: oklch(0.85 0.13 78);   /* lighter amber text */
+  --sidebar: oklch(0.21 0.006 285.9);
+  --sidebar-foreground: oklch(0.967 0.001 286.4);
+  --sidebar-primary: oklch(0.696 0.17 162.5);
+  --sidebar-primary-foreground: oklch(0.21 0.006 285.9);
+  --sidebar-accent: oklch(0.32 0.006 285.9);
+  --sidebar-accent-foreground: oklch(0.967 0.001 286.4);
+  --sidebar-border: oklch(0.37 0.006 285.9);
+  --sidebar-ring: oklch(0.696 0.17 162.5);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Varela_Round, Nunito_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 import "./globals.css";
 
 const valeraRound = Varela_Round({
@@ -43,7 +44,7 @@ export default function RootLayout({
       className={`${valeraRound.variable} ${nunitoSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
         <Toaster richColors position="top-center" />
       </body>
     </html>
