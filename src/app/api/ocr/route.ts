@@ -1,3 +1,4 @@
+import sharp from "sharp";
 import {
   GoogleGenerativeAI,
   SchemaType,
@@ -82,6 +83,35 @@ const schema = {
 } as unknown as ObjectSchema;
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const COMPRESS_MAX_DIM = 2048;
+const COMPRESS_QUALITY = 85;
+
+async function compressImage(buffer: Buffer, mimeType: string): Promise<Buffer> {
+  try {
+    let pipeline = sharp(buffer).rotate(); // auto-orient based on EXIF
+
+    const metadata = await pipeline.metadata();
+    if (metadata.width && metadata.height) {
+      const longest = Math.max(metadata.width, metadata.height);
+      if (longest > COMPRESS_MAX_DIM) {
+        pipeline = pipeline.resize({
+          width: metadata.width >= metadata.height ? COMPRESS_MAX_DIM : undefined,
+          height: metadata.height > metadata.width ? COMPRESS_MAX_DIM : undefined,
+          fit: "inside",
+          withoutEnlargement: true,
+        });
+      }
+    }
+
+    if (mimeType === "image/png") {
+      return pipeline.jpeg({ quality: COMPRESS_QUALITY }).toBuffer() as Promise<Buffer>;
+    }
+
+    return pipeline.jpeg({ quality: COMPRESS_QUALITY }).toBuffer() as Promise<Buffer>;
+  } catch {
+    return buffer;
+  }
+}
 
 interface LineItem {
   name: string;
@@ -119,8 +149,10 @@ export async function POST(req: NextRequest) {
   }
 
   const bytes = await file.arrayBuffer();
-  const base64 = Buffer.from(bytes).toString("base64");
-  const mimeType = (file.type || "image/jpeg") as "image/jpeg";
+  const originalMime = file.type || "image/jpeg";
+  const imageBuffer = await compressImage(Buffer.from(bytes), originalMime);
+  const mimeType = "image/jpeg"; // always JPEG after compression
+  const base64 = imageBuffer.toString("base64");
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
